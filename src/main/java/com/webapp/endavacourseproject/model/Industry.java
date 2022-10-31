@@ -1,17 +1,12 @@
 package com.webapp.endavacourseproject.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Getter
-@Setter
-@EqualsAndHashCode
-@RequiredArgsConstructor
+@Data
+@Table(name = "industries")
 public class Industry {
 
     @Id

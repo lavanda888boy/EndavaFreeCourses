@@ -1,18 +1,13 @@
 package com.webapp.endavacourseproject.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
-@EqualsAndHashCode
-@RequiredArgsConstructor
+@Data
+@Table(name = "mentors")
 public class Mentor {
 
     @Id

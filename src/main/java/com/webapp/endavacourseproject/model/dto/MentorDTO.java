@@ -4,11 +4,7 @@ import lombok.*;
 
 import java.util.List;
 
-@Getter
-@Setter
-@EqualsAndHashCode
-@NoArgsConstructor
-@RequiredArgsConstructor
+@Data
 public class MentorDTO {
 
     private Long id;
