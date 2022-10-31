@@ -1,15 +1,19 @@
 package com.webapp.endavacourseproject.model;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
 @EqualsAndHashCode
 @RequiredArgsConstructor
-public class UserModel {
+public class Mentor {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -22,4 +26,6 @@ public class UserModel {
     @Column(nullable = false)
     private String lastName;
 
+    @OneToMany
+    private List<Industry> industries;
 }
