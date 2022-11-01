@@ -7,7 +7,10 @@ import javax.validation.constraints.Email;
 
 @Entity
 @Data
-@Table(name = "users")
+@Table(name = "users",
+        uniqueConstraints = {
+            @UniqueConstraint(columnNames = {"firstName", "lastName"})
+        })
 public class User {
 
     @Id

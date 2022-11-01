@@ -8,7 +8,9 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name = "mentors")
+@Table(name = "mentors", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"firstName", "lastName"})
+})
 public class Mentor {
 
     @Id
