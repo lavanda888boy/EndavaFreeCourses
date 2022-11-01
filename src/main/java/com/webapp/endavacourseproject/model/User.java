@@ -3,6 +3,7 @@ package com.webapp.endavacourseproject.model;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 
 @Entity
 @Data
@@ -19,6 +20,10 @@ public class User {
 
     @Column(nullable = false)
     private String lastName;
+
+    @Email
+    @Column(nullable = false)
+    private String email;
 
     private String activityDomain;
 
