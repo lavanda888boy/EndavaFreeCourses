@@ -17,9 +17,10 @@ public class UserService {
         User user = new User();
 
         user.setId(userDTO.getId());
-        user.setFirstName(user.getFirstName());
-        user.setLastName(user.getLastName());
-        user.setActivityDomain(user.getActivityDomain());
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
+        user.setEmail(userDTO.getEmail());
+        user.setActivityDomain(userDTO.getActivityDomain());
 
         userDAO.save(user);
     }

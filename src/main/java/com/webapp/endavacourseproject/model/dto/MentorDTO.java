@@ -13,5 +13,7 @@ public class MentorDTO {
 
     private String lastName;
 
+    private String email;
+
     private List<IndustryDTO> industries;
 }
