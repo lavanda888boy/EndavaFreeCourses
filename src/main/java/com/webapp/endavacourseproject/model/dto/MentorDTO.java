@@ -1,5 +1,6 @@
 package com.webapp.endavacourseproject.model.dto;
 
+import com.webapp.endavacourseproject.model.Industry;
 import lombok.*;
 
 import java.util.List;
@@ -15,5 +16,5 @@ public class MentorDTO {
 
     private String email;
 
-    private List<IndustryDTO> industries;
+    private List<Industry> industries;
 }
