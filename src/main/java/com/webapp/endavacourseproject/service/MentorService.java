@@ -2,11 +2,11 @@ package com.webapp.endavacourseproject.service;
 
 import com.webapp.endavacourseproject.model.Mentor;
 import com.webapp.endavacourseproject.model.dto.MentorDTO;
-import com.webapp.endavacourseproject.model.dto.UserDTO;
 import com.webapp.endavacourseproject.repository.MentorDAO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,8 +26,30 @@ public class MentorService {
         mentorDAO.save(mentor);
     }
 
-    public List<UserDTO> getAll(Long limit){
-        return null;
+    public List<MentorDTO> getAll(Long limit){
+        List<Mentor> mentors;
+
+        if (limit == null) {
+            mentors = mentorDAO.getAllMentors();
+        } else {
+            mentors = mentorDAO.getAllMentors(limit);
+        }
+
+        List<MentorDTO> mentorDTOS = new ArrayList<>();
+
+        for (Mentor mentor : mentors) {
+            MentorDTO mdto = new MentorDTO();
+
+            mdto.setId(mentor.getId());
+            mdto.setFirstName(mentor.getFirstName());
+            mdto.setLastName(mentor.getLastName());
+            mdto.setEmail(mentor.getEmail());
+            mdto.setIndustries(mentor.getIndustries());
+
+            mentorDTOS.add(mdto);
+        }
+
+        return mentorDTOS;
     }
 
     public void update(Long id, MentorDTO mentorDTO){
