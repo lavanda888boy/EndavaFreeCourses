@@ -25,9 +25,9 @@ public class UserController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<Object> getAllUsers(@RequestBody(required = false) Long limit){
+    public ResponseEntity<Object> getAllUsers(@RequestParam(required = false) Long limit){
         try {
-             return new ResponseEntity<>(userService.getAll(limit), HttpStatus.OK);
+            return new ResponseEntity<>(userService.getAll(limit), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

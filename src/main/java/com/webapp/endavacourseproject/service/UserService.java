@@ -6,6 +6,7 @@ import com.webapp.endavacourseproject.repository.UserDAO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,7 +27,29 @@ public class UserService {
     }
 
     public List<UserDTO> getAll(Long limit){
-        return null;
+        List<User> users;
+
+        if (limit == null) {
+            users = userDAO.getAllUsers();
+        } else {
+            users = userDAO.getAllUsers(limit);
+        }
+        
+        List<UserDTO> userDTOS = new ArrayList<>();
+
+        for (User user : users) {
+            UserDTO udto = new UserDTO();
+
+            udto.setId(user.getId());
+            udto.setFirstName(user.getFirstName());
+            udto.setLastName(user.getLastName());
+            udto.setEmail(user.getEmail());
+            udto.setActivityDomain(user.getActivityDomain());
+
+            userDTOS.add(udto);
+        }
+
+        return userDTOS;
     }
 
     public void update(Long id, UserDTO userDTO){
