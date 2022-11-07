@@ -17,7 +17,6 @@ public class UserService {
 
     private final UserDAO userDAO;
     public void add(UserDTO userDTO) throws RestException{
-        validateName(userDTO.getFirstName(), userDTO.getLastName());
         User user = new User(userDTO);
 
         try {
@@ -27,44 +26,44 @@ public class UserService {
         }
     }
 
-    public List<UserDTO> getAll(Long limit){
-        List<User> users;
+    public List<UserDTO> getAll(Long limit) throws RestException{
+        try {
+            List<User> users;
 
-        if (limit == null) {
-            users = userDAO.getAllUsers();
-        } else {
-            users = userDAO.getAllUsers(limit);
+            if (limit == null) {
+                users = userDAO.getAllUsers();
+            } else {
+                users = userDAO.getAllUsers(limit);
+            }
+
+            List<UserDTO> userDTOS = new ArrayList<>();
+
+            for (User user : users) {
+                UserDTO udto = new UserDTO(user);
+                userDTOS.add(udto);
+            }
+            return userDTOS;
+        } catch (Exception e) {
+            throw new RestException("Database issue, cannot get all users", HttpStatus.BAD_REQUEST);
         }
-        
-        List<UserDTO> userDTOS = new ArrayList<>();
-
-        for (User user : users) {
-            UserDTO udto = new UserDTO();
-
-            udto.setId(user.getId());
-            udto.setFirstName(user.getFirstName());
-            udto.setLastName(user.getLastName());
-            udto.setEmail(user.getEmail());
-            udto.setActivityDomain(user.getActivityDomain());
-
-            userDTOS.add(udto);
-        }
-
-        return userDTOS;
     }
 
-    public void update(Long id, UserDTO userDTO){
+    public void update(Long id, UserDTO userDTO) throws RestException{
 
     }
 
-    public void delete(Long id){
-        userDAO.deleteById(id);
+    public void delete(Long id) throws RestException{
+        try {
+            userDAO.deleteById(id);
+        } catch (Exception e) {
+            throw new RestException("Database issue, cannot delete user", HttpStatus.BAD_REQUEST);
+        }
     }
 
-    private void validateName(String firstName, String lastName) throws RestException {
-        if(firstName.length() <= 10  &&  lastName.length() <= 10){
-            return;
+    private boolean validateName(String name) throws RestException {
+        if(!name.isEmpty() && !name.contains(" ") && name.length() >= 1 && name.length() <= 10){
+            return true;
         }
-        throw new RestException("Too long first name or last name", HttpStatus.BAD_REQUEST);
+        return false;
     }
 }

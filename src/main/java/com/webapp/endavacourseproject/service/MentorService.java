@@ -38,14 +38,7 @@ public class MentorService {
         List<MentorDTO> mentorDTOS = new ArrayList<>();
 
         for (Mentor mentor : mentors) {
-            MentorDTO mdto = new MentorDTO();
-
-            mdto.setId(mentor.getId());
-            mdto.setFirstName(mentor.getFirstName());
-            mdto.setLastName(mentor.getLastName());
-            mdto.setEmail(mentor.getEmail());
-            mdto.setIndustries(mentor.getIndustries());
-
+            MentorDTO mdto = new MentorDTO(mentor);
             mentorDTOS.add(mdto);
         }
 
