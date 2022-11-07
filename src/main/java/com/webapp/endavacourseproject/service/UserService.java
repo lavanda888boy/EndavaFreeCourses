@@ -1,9 +1,11 @@
 package com.webapp.endavacourseproject.service;
 
+import com.webapp.endavacourseproject.exceptionhandling.RestException;
 import com.webapp.endavacourseproject.model.User;
 import com.webapp.endavacourseproject.model.dto.UserDTO;
 import com.webapp.endavacourseproject.repository.UserDAO;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,16 +16,15 @@ import java.util.List;
 public class UserService {
 
     private final UserDAO userDAO;
-    public void add(UserDTO userDTO){
-        User user = new User();
+    public void add(UserDTO userDTO) throws RestException{
+        validateName(userDTO.getFirstName(), userDTO.getLastName());
+        User user = new User(userDTO);
 
-        user.setId(userDTO.getId());
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setEmail(userDTO.getEmail());
-        user.setActivityDomain(userDTO.getActivityDomain());
-
-        userDAO.save(user);
+        try {
+            userDAO.save(user);
+        } catch (Exception e) {
+            throw new RestException("Database issue, could not add new user", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     public List<UserDTO> getAll(Long limit){
@@ -58,5 +59,12 @@ public class UserService {
 
     public void delete(Long id){
         userDAO.deleteById(id);
+    }
+
+    private void validateName(String firstName, String lastName) throws RestException {
+        if(firstName.length() <= 10  &&  lastName.length() <= 10){
+            return;
+        }
+        throw new RestException("Too long first name or last name", HttpStatus.BAD_REQUEST);
     }
 }
