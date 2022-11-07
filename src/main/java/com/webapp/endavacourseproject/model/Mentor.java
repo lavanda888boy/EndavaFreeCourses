@@ -1,5 +1,6 @@
 package com.webapp.endavacourseproject.model;
 
+import com.webapp.endavacourseproject.model.dto.MentorDTO;
 import lombok.*;
 
 import javax.persistence.*;
@@ -7,7 +8,9 @@ import javax.validation.constraints.Email;
 import java.util.List;
 
 @Entity
-@Data
+@NoArgsConstructor
+@Getter
+@Setter
 @Table(name = "mentors", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"firstName", "lastName"})
 })
@@ -30,4 +33,12 @@ public class Mentor {
 
     @OneToMany
     private List<Industry> industries;
+
+    public void Mentor(MentorDTO mentorDTO){
+        this.setId(mentorDTO.getId());
+        this.setFirstName(mentorDTO.getFirstName());
+        this.setLastName(mentorDTO.getLastName());
+        this.setEmail(mentorDTO.getEmail());
+        this.setIndustries(mentorDTO.getIndustries());
+    }
 }

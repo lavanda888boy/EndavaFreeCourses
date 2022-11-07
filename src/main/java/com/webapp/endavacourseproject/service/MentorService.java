@@ -1,9 +1,11 @@
 package com.webapp.endavacourseproject.service;
 
+import com.webapp.endavacourseproject.exceptionhandling.RestException;
 import com.webapp.endavacourseproject.model.Mentor;
 import com.webapp.endavacourseproject.model.dto.MentorDTO;
 import com.webapp.endavacourseproject.repository.MentorDAO;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,16 +16,14 @@ import java.util.List;
 public class MentorService {
 
     private final MentorDAO mentorDAO;
-    public void add(MentorDTO mentorDTO){
+    public void add(MentorDTO mentorDTO) throws RestException {
         Mentor mentor = new Mentor();
 
-        mentor.setId(mentorDTO.getId());
-        mentor.setFirstName(mentorDTO.getFirstName());
-        mentor.setLastName(mentorDTO.getLastName());
-        mentor.setEmail(mentorDTO.getEmail());
-        mentor.setIndustries(mentorDTO.getIndustries());
-
-        mentorDAO.save(mentor);
+        try {
+            mentorDAO.save(mentor);
+        } catch (Exception e) {
+            throw new RestException("Database issue, cannot add new mentor", HttpStatus.BAD_REQUEST);
+        }
     }
 
     public List<MentorDTO> getAll(Long limit){
