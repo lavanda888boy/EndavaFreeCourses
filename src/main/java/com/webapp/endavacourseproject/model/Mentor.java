@@ -41,6 +41,5 @@ public class Mentor {
         this.setFirstName(mentorDTO.getFirstName());
         this.setLastName(mentorDTO.getLastName());
         this.setEmail(mentorDTO.getEmail());
-        this.setIndustries(mentorDTO.getIndustries());
     }
 }

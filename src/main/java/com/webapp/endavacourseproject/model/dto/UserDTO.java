@@ -18,8 +18,6 @@ public class UserDTO {
 
     private String activityDomain;
 
-    private MentorDTO mentor;
-
     public UserDTO(User user){
         this.setId(user.getId());
         this.setFirstName(user.getFirstName());

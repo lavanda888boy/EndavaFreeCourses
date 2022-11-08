@@ -2,7 +2,6 @@ package com.webapp.endavacourseproject.service;
 
 import com.webapp.endavacourseproject.exceptionhandling.RestException;
 import com.webapp.endavacourseproject.model.Mentor;
-import com.webapp.endavacourseproject.model.User;
 import com.webapp.endavacourseproject.model.dto.MentorDTO;
 import com.webapp.endavacourseproject.repository.MentorDAO;
 import lombok.AllArgsConstructor;
@@ -19,6 +18,7 @@ public class MentorService {
 
     private final MentorDAO mentorDAO;
     public void add(MentorDTO mentorDTO) throws RestException {
+        validateMentor(mentorDTO);
         Mentor mentor = new Mentor();
 
         try {
@@ -52,14 +52,14 @@ public class MentorService {
 
     public void update(Long id, MentorDTO mentorDTO) throws RestException{
         Optional<Mentor> optionalMentor = mentorDAO.findById(id);
-        //userPresent(optionalUser);
+        mentorPresent(optionalMentor);
+        validateMentor(mentorDTO);
 
         Mentor updatedMentor = optionalMentor.get();
 
         updatedMentor.setFirstName(mentorDTO.getFirstName());
         updatedMentor.setLastName(mentorDTO.getLastName());
         updatedMentor.setEmail(mentorDTO.getEmail());
-        updatedMentor.setIndustries(mentorDTO.getIndustries());
 
         try {
             mentorDAO.save(updatedMentor);
@@ -74,5 +74,27 @@ public class MentorService {
         } catch (Exception e) {
             throw new RestException("Database issue, cannot delete mentor", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private void validateMentor(MentorDTO mentorDTO) throws RestException{
+        if(!validateName(mentorDTO.getFirstName())){
+            throw new RestException("Invalid first name", HttpStatus.BAD_REQUEST);
+        } else if(!validateName(mentorDTO.getLastName())){
+            throw new RestException("Invalid last name", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private boolean validateName(String name){
+        if(!name.isEmpty() && !name.contains(" ") && name.length() >= 1 && name.length() <= 10){
+            return true;
+        }
+        return false;
+    }
+
+    private void mentorPresent(Optional<Mentor> optionalMentor) throws RestException{
+        if(optionalMentor.isPresent()){
+            return;
+        }
+        throw new RestException("User not present", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

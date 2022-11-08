@@ -18,6 +18,7 @@ public class UserService {
 
     private final UserDAO userDAO;
     public void add(UserDTO userDTO) throws RestException{
+        validateUser(userDTO);
         User user = new User(userDTO);
 
         try {
@@ -28,6 +29,10 @@ public class UserService {
     }
 
     public List<UserDTO> getAll(Long limit) throws RestException{
+        if(limit <= 0){
+            throw new RestException("Unacceptable limit (negative or zero)", HttpStatus.BAD_REQUEST);
+        }
+
         try {
             List<User> users;
 
@@ -52,6 +57,7 @@ public class UserService {
     public void update(Long id, UserDTO userDTO) throws RestException{
         Optional<User> optionalUser = userDAO.findById(id);
         userPresent(optionalUser);
+        validateUser(userDTO);
 
         User updatedUser = optionalUser.get();
 
@@ -75,8 +81,25 @@ public class UserService {
         }
     }
 
-    private boolean validateName(String name) throws RestException {
+    private void validateUser(UserDTO userDTO) throws RestException{
+        if(!validateName(userDTO.getFirstName())){
+            throw new RestException("Invalid first name", HttpStatus.BAD_REQUEST);
+        } else if(!validateName(userDTO.getLastName())){
+            throw new RestException("Invalid last name", HttpStatus.BAD_REQUEST);
+        } else if(!validateActivityDomain(userDTO.getActivityDomain())){
+            throw new RestException("Invalid activity domain", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private boolean validateName(String name){
         if(!name.isEmpty() && !name.contains(" ") && name.length() >= 1 && name.length() <= 10){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean validateActivityDomain(String domain){
+        if(!domain.isEmpty() && domain.length() >= 2 && domain.length() <= 10){
             return true;
         }
         return false;
