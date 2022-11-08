@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 @Entity
@@ -27,7 +28,8 @@ public class Mentor {
     @Column(nullable = false)
     private String lastName;
 
-    @Email
+    @Email(message = "Email is not valid",
+            regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}", flags = Pattern.Flag.CASE_INSENSITIVE)
     @Column(nullable = false)
     private String email;
 

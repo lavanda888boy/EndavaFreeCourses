@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Entity
 @NoArgsConstructor
@@ -30,7 +31,8 @@ public class User {
     @NotNull(message = "Last name is required")
     private String lastName;
 
-    @Email
+    @Email(message = "Email is not valid",
+            regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}", flags = Pattern.Flag.CASE_INSENSITIVE)
     @Column()
     @NotNull(message = "Email is required")
     private String email;

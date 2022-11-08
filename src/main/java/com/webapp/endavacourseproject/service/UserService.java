@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -22,7 +23,7 @@ public class UserService {
         try {
             userDAO.save(user);
         } catch (Exception e) {
-            throw new RestException("Database issue, could not add new user", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new RestException("Database issue, cannot not add new user", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -49,7 +50,21 @@ public class UserService {
     }
 
     public void update(Long id, UserDTO userDTO) throws RestException{
+        Optional<User> optionalUser = userDAO.findById(id);
+        userPresent(optionalUser);
 
+        User updatedUser = optionalUser.get();
+
+        updatedUser.setFirstName(userDTO.getFirstName());
+        updatedUser.setLastName(userDTO.getLastName());
+        updatedUser.setEmail(userDTO.getEmail());
+        updatedUser.setActivityDomain(userDTO.getActivityDomain());
+
+        try {
+            userDAO.save(updatedUser);
+        } catch (Exception e) {
+            throw new RestException("Database issue, cannot update user", HttpStatus.BAD_REQUEST);
+        }
     }
 
     public void delete(Long id) throws RestException{
@@ -65,5 +80,12 @@ public class UserService {
             return true;
         }
         return false;
+    }
+
+    private void userPresent(Optional<User> optionalUser) throws RestException{
+        if(optionalUser.isPresent()){
+            return;
+        }
+        throw new RestException("User not present", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
