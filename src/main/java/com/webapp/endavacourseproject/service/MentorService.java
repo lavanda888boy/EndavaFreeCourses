@@ -60,6 +60,7 @@ public class MentorService {
         updatedMentor.setFirstName(mentorDTO.getFirstName());
         updatedMentor.setLastName(mentorDTO.getLastName());
         updatedMentor.setEmail(mentorDTO.getEmail());
+        updatedMentor.setWorkingState(mentorDTO.isWorkingState());
 
         try {
             mentorDAO.save(updatedMentor);

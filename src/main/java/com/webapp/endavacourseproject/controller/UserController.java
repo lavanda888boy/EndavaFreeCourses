@@ -18,7 +18,7 @@ public class UserController {
     public ResponseEntity<Object> addNewUser(@RequestBody UserDTO userDTO){
         try {
             userService.add(userDTO);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity<>("A new user was created, a mentor was assigned to it", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -37,7 +37,7 @@ public class UserController {
     public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO){
         try {
             userService.update(id, userDTO);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>("A user was updated", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

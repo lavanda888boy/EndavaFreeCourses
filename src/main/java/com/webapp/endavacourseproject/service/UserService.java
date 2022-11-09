@@ -1,28 +1,37 @@
 package com.webapp.endavacourseproject.service;
 
 import com.webapp.endavacourseproject.exceptionhandling.RestException;
+import com.webapp.endavacourseproject.model.Mentor;
 import com.webapp.endavacourseproject.model.User;
 import com.webapp.endavacourseproject.model.dto.UserDTO;
+import com.webapp.endavacourseproject.repository.MentorDAO;
 import com.webapp.endavacourseproject.repository.UserDAO;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 @AllArgsConstructor
 public class UserService {
 
     private final UserDAO userDAO;
+
+    private final MentorDAO mentorDAO;
+
     public void add(UserDTO userDTO) throws RestException{
         validateUser(userDTO);
         User user = new User(userDTO);
 
         try {
             userDAO.save(user);
+            assignMentor(userDAO.getUserID(user.getFirstName(), user.getLastName()));
         } catch (Exception e) {
             throw new RestException("Database issue, cannot not add new user", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -78,6 +87,29 @@ public class UserService {
             userDAO.deleteById(id);
         } catch (Exception e) {
             throw new RestException("Database issue, cannot delete user", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private void assignMentor(Long userID) throws RestException{
+        Optional<User> optionalUser = userDAO.findById(userID);
+
+        userPresent(optionalUser);
+
+        User user = userDAO.findById(userID).get();
+        List<Mentor> mentors = mentorDAO.getAllMentors();
+
+        if(user.getMentor() == null){
+            for (Mentor mentor : mentors) {
+                if(!mentor.isWorkingState() && mentor.getIndustries().contains(user.getActivityDomain())){
+                    user.setMentor(mentor);
+                    break;
+                }
+            }
+            if(user.getMentor() == null){
+                throw new RestException("There are no available mentors for such user", HttpStatus.BAD_REQUEST);
+            }
+        } else{
+            throw new RestException("User already has a mentor", HttpStatus.BAD_REQUEST);
         }
     }
 

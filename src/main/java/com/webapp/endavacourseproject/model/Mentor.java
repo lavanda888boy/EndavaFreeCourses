@@ -33,6 +33,9 @@ public class Mentor {
     @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
+    private boolean workingState;
+
     @OneToMany
     private List<Industry> industries;
 
