@@ -18,7 +18,7 @@ public class MentorController {
     public ResponseEntity<Object> addNewMentor(@RequestBody MentorDTO mentorDTO){
         try {
             mentorService.add(mentorDTO);
-            return new ResponseEntity<>(HttpStatus.CREATED);
+            return new ResponseEntity<>("A mentor was created", HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -37,7 +37,7 @@ public class MentorController {
     public ResponseEntity<Object> updateMentor(@PathVariable Long id, @RequestBody MentorDTO mentorDTO){
         try {
             mentorService.update(id, mentorDTO);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>("A mentor was updated", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -47,7 +47,7 @@ public class MentorController {
     public ResponseEntity<Object> deleteMentor(@PathVariable Long id){
         try {
             mentorService.delete(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>("A mentor was deleted", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
