@@ -39,10 +39,11 @@ public class Mentor {
     @OneToMany
     private List<Industry> industries;
 
-    public void Mentor(MentorDTO mentorDTO){
+    public Mentor(MentorDTO mentorDTO){
         this.setId(mentorDTO.getId());
         this.setFirstName(mentorDTO.getFirstName());
         this.setLastName(mentorDTO.getLastName());
         this.setEmail(mentorDTO.getEmail());
+        this.setWorkingState(mentorDTO.isWorkingState());
     }
 }

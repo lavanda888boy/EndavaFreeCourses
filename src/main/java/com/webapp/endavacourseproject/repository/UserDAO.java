@@ -16,6 +16,6 @@ public interface UserDAO extends JpaRepository<User, Long> {
     @Query(value = "select * from users", nativeQuery = true)
     List<User> getAllUsers();
 
-    @Query(value = "select * from users limit ?1 offset 1", nativeQuery = true)
+    @Query(value = "select * from users limit ?1", nativeQuery = true)
     List<User> getAllUsers(Long l);
 }
