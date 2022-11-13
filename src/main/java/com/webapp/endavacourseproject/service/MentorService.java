@@ -1,8 +1,10 @@
 package com.webapp.endavacourseproject.service;
 
 import com.webapp.endavacourseproject.exceptionhandling.RestException;
+import com.webapp.endavacourseproject.model.Industry;
 import com.webapp.endavacourseproject.model.Mentor;
 import com.webapp.endavacourseproject.model.dto.MentorDTO;
+import com.webapp.endavacourseproject.repository.IndustryDAO;
 import com.webapp.endavacourseproject.repository.MentorDAO;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -10,9 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -21,13 +21,17 @@ public class MentorService {
     private final Logger logger = LoggerFactory.getLogger(MentorService.class);
 
     private final MentorDAO mentorDAO;
+
+    private final IndustryDAO industryDAO;
+
     public void add(MentorDTO mentorDTO) throws RestException {
         validateMentor(mentorDTO);
         Mentor mentor = new Mentor(mentorDTO);
 
         try {
+            assignIndustries(mentor);
             mentorDAO.save(mentor);
-            logger.info("A new mentor was added", mentor);
+            logger.info("A new mentor was added and industries were assigned to it", mentor);
         } catch (Exception e) {
             logger.error("Mentor could not be added to the database!");
             throw new RestException("Database issue, cannot add new mentor", HttpStatus.BAD_REQUEST);
@@ -92,6 +96,35 @@ public class MentorService {
             logger.error("Mentor could not be deleted!");
             throw new RestException("Database issue, cannot delete mentor", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    private void assignIndustries(Mentor mentor) throws RestException{
+        List<Industry> industries = industryDAO.findAll();
+        logger.info("List of industries was extracted from the database", industries.size());
+
+        if(industries == null){
+            logger.error("The industries table is empty!");
+            throw new RestException("No industries were extracted from the database", HttpStatus.BAD_REQUEST);
+        }
+
+        List<Industry> suitableIndustries = new LinkedList<>();
+
+        Random r = new Random();
+        int index;
+        for (int i = 0; i < 2; i++) {
+            index = r.nextInt(industries.size());
+            Industry ind = industries.get(index);
+
+            if(suitableIndustries.size() == 0){
+                suitableIndustries.add(ind);
+            } else{
+                if(!suitableIndustries.contains(ind)){
+                    suitableIndustries.add(ind);
+                }
+            }
+        }
+        mentor.setIndustries(suitableIndustries);
+        logger.info("Industries were assigned to the mentor");
     }
 
     private void validateMentor(MentorDTO mentorDTO) throws RestException{

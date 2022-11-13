@@ -1,10 +1,9 @@
 package com.webapp.endavacourseproject.model.dto;
 
-import com.webapp.endavacourseproject.model.Industry;
 import com.webapp.endavacourseproject.model.Mentor;
 import lombok.*;
 
-import java.util.List;
+
 
 @NoArgsConstructor
 @Getter

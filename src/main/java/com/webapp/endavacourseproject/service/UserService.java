@@ -105,7 +105,7 @@ public class UserService {
 
         userPresent(optionalUser);
 
-        User user = userDAO.findById(userID).get();
+        User user = optionalUser.get();
         logger.info("User was extracted from the database", userID);
         List<Mentor> mentors = mentorDAO.getAllMentors();
         logger.info("List of mentors was extracted from the database", mentors.size());
@@ -126,7 +126,7 @@ public class UserService {
 
     private void validateUser(UserDTO userDTO) throws RestException{
         if(!validateName(userDTO.getFirstName())){
-            logger.error("An invalid first name was introduced by the user", userDTO.getFirstName());
+            logger.error("An invalid first name was introduced by the user: {}", userDTO.getFirstName());
             throw new RestException("Invalid first name", HttpStatus.BAD_REQUEST);
         } else if(!validateName(userDTO.getLastName())){
             logger.error("An invalid last name was introduced by the user", userDTO.getLastName());
