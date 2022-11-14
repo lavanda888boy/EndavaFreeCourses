@@ -1,6 +1,7 @@
 package com.webapp.endavacourseproject.service;
 
 import com.webapp.endavacourseproject.exceptionhandling.RestException;
+import com.webapp.endavacourseproject.model.Industry;
 import com.webapp.endavacourseproject.model.Mentor;
 import com.webapp.endavacourseproject.model.User;
 import com.webapp.endavacourseproject.model.dto.UserDTO;
@@ -31,8 +32,8 @@ public class UserService {
         User user = new User(userDTO);
 
         try {
+            assignMentor(user);
             userDAO.save(user);
-            assignMentor(userDAO.getUserID(user.getFirstName(), user.getLastName()));
             logger.info("A new user was added and a mentor was assigned to it", user);
         } catch (Exception e) {
             logger.error("User could not be added to the database!");
@@ -100,20 +101,23 @@ public class UserService {
         }
     }
 
-    private void assignMentor(Long userID) throws RestException{
-        Optional<User> optionalUser = userDAO.findById(userID);
-
-        userPresent(optionalUser);
-
-        User user = optionalUser.get();
-        logger.info("User was extracted from the database", userID);
+    private void assignMentor(User user) throws RestException{
         List<Mentor> mentors = mentorDAO.getAllMentors();
         logger.info("List of mentors was extracted from the database", mentors.size());
 
+        // TODO: rewrite the check whether the mentors' industries include user's activity domain
         if(user.getMentor() == null){
             for (Mentor mentor : mentors) {
-                if(!mentor.isWorkingState() && mentor.getIndustries().contains(user.getActivityDomain())){
-                    user.setMentor(mentor);
+                if(!mentor.isWorkingState()){
+                    List<Industry> mentorIndustries = mentor.getIndustries();
+                    for (Industry mind : mentorIndustries) {
+                        if (mind.getIndustryName().compareTo(user.getActivityDomain()) == 0) {
+                            user.setMentor(mentor);
+                            break;
+                        }
+                    }
+                }
+                if(user.getMentor() != null){
                     break;
                 }
             }

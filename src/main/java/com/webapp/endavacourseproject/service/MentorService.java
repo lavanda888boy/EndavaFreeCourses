@@ -38,8 +38,8 @@ public class MentorService {
         }
     }
 
-    public List<MentorDTO> getAll(Long limit) throws RestException{
-        if(limit != null && limit <= 0){
+    public List<MentorDTO> getAll(Long limit) throws RestException {
+        if (limit != null && limit <= 0) {
             logger.error("Wrong input data (limit less or equal than zero)!", limit);
             throw new RestException("Unacceptable limit (negative or zero)", HttpStatus.BAD_REQUEST);
         }
@@ -67,7 +67,7 @@ public class MentorService {
         }
     }
 
-    public void update(Long id, MentorDTO mentorDTO) throws RestException{
+    public void update(Long id, MentorDTO mentorDTO) throws RestException {
         Optional<Mentor> optionalMentor = mentorDAO.findById(id);
         mentorPresent(optionalMentor);
         validateMentor(mentorDTO);
@@ -88,7 +88,7 @@ public class MentorService {
         }
     }
 
-    public void delete(Long id) throws RestException{
+    public void delete(Long id) throws RestException {
         try {
             mentorDAO.deleteById(id);
             logger.info("Mentor was deleted from the database", id);
@@ -98,11 +98,11 @@ public class MentorService {
         }
     }
 
-    private void assignIndustries(Mentor mentor) throws RestException{
+    private void assignIndustries(Mentor mentor) throws RestException {
         List<Industry> industries = industryDAO.findAll();
         logger.info("List of industries was extracted from the database", industries.size());
 
-        if(industries == null){
+        if (industries == null) {
             logger.error("The industries table is empty!");
             throw new RestException("No industries were extracted from the database", HttpStatus.BAD_REQUEST);
         }
@@ -111,14 +111,14 @@ public class MentorService {
 
         Random r = new Random();
         int index;
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 3; i++) {
             index = r.nextInt(industries.size());
             Industry ind = industries.get(index);
 
-            if(suitableIndustries.size() == 0){
+            if (suitableIndustries.size() == 0) {
                 suitableIndustries.add(ind);
-            } else{
-                if(!suitableIndustries.contains(ind)){
+            } else {
+                if (!suitableIndustries.contains(ind)) {
                     suitableIndustries.add(ind);
                 }
             }
@@ -127,25 +127,22 @@ public class MentorService {
         logger.info("Industries were assigned to the mentor");
     }
 
-    private void validateMentor(MentorDTO mentorDTO) throws RestException{
-        if(!validateName(mentorDTO.getFirstName())){
+    private void validateMentor(MentorDTO mentorDTO) throws RestException {
+        if (!validateName(mentorDTO.getFirstName())) {
             logger.error("An invalid first name was introduced for the mentor", mentorDTO.getFirstName());
             throw new RestException("Invalid first name", HttpStatus.BAD_REQUEST);
-        } else if(!validateName(mentorDTO.getLastName())){
+        } else if (!validateName(mentorDTO.getLastName())) {
             logger.error("An invalid last name was introduced for the mentor", mentorDTO.getLastName());
             throw new RestException("Invalid last name", HttpStatus.BAD_REQUEST);
         }
     }
 
-    private boolean validateName(String name){
-        if(!name.isEmpty() && !name.contains(" ") && name.length() >= 1 && name.length() <= 10){
-            return true;
-        }
-        return false;
+    private boolean validateName(String name) {
+        return !name.isEmpty() && !name.contains(" ") && name.length() >= 1 && name.length() <= 10;
     }
 
-    private void mentorPresent(Optional<Mentor> optionalMentor) throws RestException{
-        if(optionalMentor.isPresent()){
+    private void mentorPresent(Optional<Mentor> optionalMentor) throws RestException {
+        if (optionalMentor.isPresent()) {
             logger.info("Mentor was found in the database", optionalMentor.get());
             return;
         }
