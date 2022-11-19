@@ -1,4 +1,4 @@
-package com.webapp.endavacourseproject;
+package com.webapp.endavacourseproject.config;
 
 
 import org.springframework.context.annotation.Bean;
