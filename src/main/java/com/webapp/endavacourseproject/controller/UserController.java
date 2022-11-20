@@ -2,6 +2,9 @@ package com.webapp.endavacourseproject.controller;
 
 import com.webapp.endavacourseproject.model.dto.UserDTO;
 import com.webapp.endavacourseproject.service.UserService;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,8 @@ public class UserController {
 
     private final UserService userService;
 
+    @SecurityRequirement(name = "averageSpringFan")
+    @SecurityRequirement(name = "averageSpringEnjoyer")
     @PostMapping("/add")
     public ResponseEntity<Object> addNewUser(@RequestBody UserDTO userDTO){
         try {
@@ -24,6 +29,8 @@ public class UserController {
         }
     }
 
+    @SecurityRequirement(name = "averageSpringFan")
+    @SecurityRequirement(name = "averageSpringEnjoyer")
     @GetMapping("/")
     public ResponseEntity<Object> getAllUsers(@RequestParam(required = false) Long limit){
         try {
@@ -33,6 +40,7 @@ public class UserController {
         }
     }
 
+    @SecurityRequirement(name = "averageSpringEnjoyer")
     @PatchMapping("update/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO){
         try {
@@ -43,6 +51,7 @@ public class UserController {
         }
     }
 
+    @SecurityRequirement(name = "averageSpringEnjoyer")
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable Long id){
         try {

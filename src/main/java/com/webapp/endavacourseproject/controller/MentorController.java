@@ -2,6 +2,7 @@ package com.webapp.endavacourseproject.controller;
 
 import com.webapp.endavacourseproject.model.dto.MentorDTO;
 import com.webapp.endavacourseproject.service.MentorService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,8 @@ public class MentorController {
 
     private final MentorService mentorService;
 
+    @SecurityRequirement(name = "averageSpringFan")
+    @SecurityRequirement(name = "averageSpringEnjoyer")
     @PostMapping("/add")
     public ResponseEntity<Object> addNewMentor(@RequestBody MentorDTO mentorDTO){
         try {
@@ -24,8 +27,10 @@ public class MentorController {
         }
     }
 
+    @SecurityRequirement(name = "averageSpringFan")
+    @SecurityRequirement(name = "averageSpringEnjoyer")
     @GetMapping("/")
-    public ResponseEntity<Object> getAllMentors(@RequestBody(required = false) Long limit){
+    public ResponseEntity<Object> getAllMentors(@RequestParam(required = false) Long limit){
         try {
             return new ResponseEntity<>(mentorService.getAll(limit), HttpStatus.OK);
         } catch (Exception e) {
@@ -33,6 +38,7 @@ public class MentorController {
         }
     }
 
+    @SecurityRequirement(name = "averageSpringEnjoyer")
     @PatchMapping("update/{id}")
     public ResponseEntity<Object> updateMentor(@PathVariable Long id, @RequestBody MentorDTO mentorDTO){
         try {
@@ -43,6 +49,7 @@ public class MentorController {
         }
     }
 
+    @SecurityRequirement(name = "averageSpringEnjoyer")
     @DeleteMapping("delete/{id}")
     public ResponseEntity<Object> deleteMentor(@PathVariable Long id){
         try {

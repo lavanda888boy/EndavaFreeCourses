@@ -18,9 +18,12 @@ import javax.validation.constraints.Pattern;
         })
 public class User {
 
+    // TODO: finish bean validation for users and mentors
+
     @Id
     @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @NotNull(message = "ID cannot be null")
     private Long id;
 
     @Column()
