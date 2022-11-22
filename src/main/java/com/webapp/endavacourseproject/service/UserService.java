@@ -93,6 +93,9 @@ public class UserService {
 
     public void delete(Long id) throws RestException{
         try {
+            Optional<User> user = userDAO.findById(id);
+            user.get().getMentor().setWorkingState(false);
+
             userDAO.deleteById(id);
             logger.info("User was deleted from the database, id = {}", id);
         } catch (Exception e) {
@@ -112,6 +115,7 @@ public class UserService {
                     for (Industry mind : mentorIndustries) {
                         if (mind.getIndustryName().compareTo(user.getActivityDomain()) == 0) {
                             user.setMentor(mentor);
+                            mentor.setWorkingState(true);
                             break;
                         }
                     }
