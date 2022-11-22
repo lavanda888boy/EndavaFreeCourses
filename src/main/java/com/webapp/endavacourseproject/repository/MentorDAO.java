@@ -10,9 +10,6 @@ import java.util.List;
 @Repository
 public interface MentorDAO extends JpaRepository<Mentor, Long> {
 
-    @Query(value = "select * from mentors", nativeQuery = true)
-    List<Mentor> getAllMentors();
-
     @Query(value = "select * from mentors limit ?1", nativeQuery = true)
     List<Mentor> getAllMentors(Long l);
 }

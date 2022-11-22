@@ -51,7 +51,7 @@ public class UserService {
             List<User> users;
 
             if (limit == null) {
-                users = userDAO.getAllUsers();
+                users = userDAO.findAll();
             } else {
                 users = userDAO.getAllUsers(limit);
             }
@@ -102,10 +102,9 @@ public class UserService {
     }
 
     private void assignMentor(User user) throws RestException{
-        List<Mentor> mentors = mentorDAO.getAllMentors();
+        List<Mentor> mentors = mentorDAO.findAll();
         logger.info("List of mentors was extracted from the database", mentors.size());
 
-        // TODO: rewrite the check whether the mentors' industries include user's activity domain
         if(user.getMentor() == null){
             for (Mentor mentor : mentors) {
                 if(!mentor.isWorkingState()){
@@ -128,6 +127,7 @@ public class UserService {
         }
     }
 
+    // TODO: make more informative validation
     private void validateUser(UserDTO userDTO) throws RestException{
         if(!validateName(userDTO.getFirstName())){
             logger.error("An invalid first name was introduced by the user: {}", userDTO.getFirstName());

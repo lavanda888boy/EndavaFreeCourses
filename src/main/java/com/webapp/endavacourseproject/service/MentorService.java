@@ -48,7 +48,7 @@ public class MentorService {
             List<Mentor> mentors;
 
             if (limit == null) {
-                mentors = mentorDAO.getAllMentors();
+                mentors = mentorDAO.findAll();
             } else {
                 mentors = mentorDAO.getAllMentors(limit);
             }
@@ -127,6 +127,7 @@ public class MentorService {
         logger.info("Industries were assigned to the mentor");
     }
 
+    // TODO: make more informative validation
     private void validateMentor(MentorDTO mentorDTO) throws RestException {
         if (!validateName(mentorDTO.getFirstName())) {
             logger.error("An invalid first name was introduced for the mentor", mentorDTO.getFirstName());
