@@ -34,7 +34,7 @@ public class UserService {
         try {
             assignMentor(user);
             userDAO.save(user);
-            logger.info("A new user was added and a mentor was assigned to it", user);
+            logger.info("A new user was added and a mentor was assigned to it: {}", user);
         } catch (Exception e) {
             logger.error("User could not be added to the database!");
             throw new RestException("Database issue, cannot not add new user", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -43,7 +43,7 @@ public class UserService {
 
     public List<UserDTO> getAll(Long limit) throws RestException{
         if(limit != null && limit <= 0){
-            logger.error("Wrong input data (limit less or equal than zero)!", limit);
+            logger.error("Wrong input data (limit less or equal than zero)!, limit = {}", limit);
             throw new RestException("Unacceptable limit (negative or zero)", HttpStatus.BAD_REQUEST);
         }
 
@@ -62,7 +62,7 @@ public class UserService {
                 UserDTO udto = new UserDTO(user);
                 userDTOS.add(udto);
             }
-            logger.info("Fetched the list of all users according to the limit", userDTOS.size());
+            logger.info("Fetched the list of all users according to the limit, size = {}", userDTOS.size());
             return userDTOS;
         } catch (Exception e) {
             logger.error("Users could not be fetched from the database!");
@@ -84,7 +84,7 @@ public class UserService {
 
         try {
             userDAO.save(updatedUser);
-            logger.info("Successfully updated a user", updatedUser);
+            logger.info("Successfully updated a user: {}", updatedUser);
         } catch (Exception e) {
             logger.error("User could not be updated!");
             throw new RestException("Database issue, cannot update user", HttpStatus.BAD_REQUEST);
@@ -94,7 +94,7 @@ public class UserService {
     public void delete(Long id) throws RestException{
         try {
             userDAO.deleteById(id);
-            logger.info("User was deleted from the database", id);
+            logger.info("User was deleted from the database, id = {}", id);
         } catch (Exception e) {
             logger.error("User could not be deleted!");
             throw new RestException("Database issue, cannot delete user", HttpStatus.BAD_REQUEST);
@@ -103,7 +103,7 @@ public class UserService {
 
     private void assignMentor(User user) throws RestException{
         List<Mentor> mentors = mentorDAO.findAll();
-        logger.info("List of mentors was extracted from the database", mentors.size());
+        logger.info("List of mentors was extracted from the database, size = {}", mentors.size());
 
         if(user.getMentor() == null){
             for (Mentor mentor : mentors) {
@@ -127,17 +127,16 @@ public class UserService {
         }
     }
 
-    // TODO: make more informative validation
     private void validateUser(UserDTO userDTO) throws RestException{
         if(!validateName(userDTO.getFirstName())){
             logger.error("An invalid first name was introduced by the user: {}", userDTO.getFirstName());
-            throw new RestException("Invalid first name", HttpStatus.BAD_REQUEST);
+            throw new RestException("Invalid first name (should be 1-10 characters long)", HttpStatus.BAD_REQUEST);
         } else if(!validateName(userDTO.getLastName())){
-            logger.error("An invalid last name was introduced by the user", userDTO.getLastName());
-            throw new RestException("Invalid last name", HttpStatus.BAD_REQUEST);
+            logger.error("An invalid last name was introduced by the user: {}", userDTO.getLastName());
+            throw new RestException("Invalid last name (should be 1-10 characters long)", HttpStatus.BAD_REQUEST);
         } else if(!validateActivityDomain(userDTO.getActivityDomain())){
-            logger.error("An invalid activity domain was introduced by the user", userDTO.getActivityDomain());
-            throw new RestException("Invalid activity domain", HttpStatus.BAD_REQUEST);
+            logger.error("An invalid activity domain was introduced by the user: {}", userDTO.getActivityDomain());
+            throw new RestException("Invalid activity domain (should be 2-15 characters long)", HttpStatus.BAD_REQUEST);
         }
         logger.info("User was successfully validated");
     }
@@ -150,7 +149,7 @@ public class UserService {
     }
 
     private boolean validateActivityDomain(String domain){
-        if(!domain.isEmpty() && domain.length() >= 2 && domain.length() <= 10){
+        if(!domain.isEmpty() && domain.length() >= 2 && domain.length() <= 15){
             return true;
         }
         return false;
@@ -158,7 +157,7 @@ public class UserService {
 
     private void userPresent(Optional<User> optionalUser) throws RestException{
         if(optionalUser.isPresent()){
-            logger.info("User was found in the database", optionalUser.get());
+            logger.info("User was found in the database: {}", optionalUser.get());
             return;
         }
         logger.error("User was not found in the database!");
