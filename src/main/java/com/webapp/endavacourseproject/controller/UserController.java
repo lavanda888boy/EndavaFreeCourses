@@ -2,8 +2,6 @@ package com.webapp.endavacourseproject.controller;
 
 import com.webapp.endavacourseproject.model.dto.UserDTO;
 import com.webapp.endavacourseproject.service.UserService;
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
